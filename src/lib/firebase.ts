@@ -1,6 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 
+/* firebase SDK と Admin SDK の Timestamp 型の差分を消す
+ */
+import { Timestamp } from "firebase/firestore";
+
+export { Timestamp };
+
 /* .env で設定したfirebase の設定を読み込む */
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
