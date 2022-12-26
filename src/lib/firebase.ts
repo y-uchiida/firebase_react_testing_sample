@@ -3,7 +3,15 @@ import { initializeApp } from "firebase/app";
 
 /* firebase SDK と Admin SDK の Timestamp 型の差分を消す
  */
-import { Timestamp } from "firebase/firestore";
+import { omit, merge } from 'lodash-es';
+import {
+	Timestamp,
+	DocumentData,
+	QueryDocumentSnapshot,
+	SnapshotOptions,
+	FirestoreDataConverter,
+	PartialWithFieldValue,
+} from 'firebase/firestore';
 
 export { Timestamp };
 
@@ -21,3 +29,28 @@ const firebaseConfig = {
 
 /* 設定したコンフィグのオブジェクトを読み込んで、firebaseを初期化する */
 export const app = initializeApp(firebaseConfig);
+
+/* firestore から取得したものは、data() と id別々のプロパティになるので、
+ * data() の中にid が含まれるようにする
+ */
+export type WithId<T> = { id: string } & T;
+
+/**
+ * firestore に保存されているドキュメントと、Idのプロパティをまとめて扱うための処理  
+ * 型の相互関係の都合で、lodash を利用している  
+ * @returns firestore のドキュメントデータにidを追加したオブジェクト
+ */
+export const getConverter = <T>(): FirestoreDataConverter<WithId<T>> => ({
+	toFirestore: (
+		data: PartialWithFieldValue<WithId<T>>
+	): DocumentData => {
+		return omit(data, ['id']);
+	},
+	fromFirestore: (
+		snapshot,
+		options: SnapshotOptions
+	): WithId<T> => {
+		return merge(snapshot.data(options) as T, { id: snapshot.id });
+	},
+});
+

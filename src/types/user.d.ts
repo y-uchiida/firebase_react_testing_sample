@@ -5,3 +5,5 @@ export type UserDocumentData = {
 	name: string | null,
 	photoUrl: string | null
 };
+
+export type User = WithId<UserDocumentData>;
