@@ -18,7 +18,10 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
-    }
+    },
+    "types": [
+      "vitest/globals" // Vitest の型が読み込まれるように設定
+    ]
   },
   "include": ["src", "tests", "./.eslintrc.cjs"],
   "references": [{ "path": "./tsconfig.node.json" }]
