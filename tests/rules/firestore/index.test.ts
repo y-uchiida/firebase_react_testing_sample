@@ -1,4 +1,4 @@
-import { usersTest } from "./collections/cases/user.rules";
+import { usersTest } from "./collections/user";
 import { initializeTestEnvironment, getTestEnv } from "./utils";
 import firebaseTestingEmulatorSettings from '../../emulator/firebase.json';
 
