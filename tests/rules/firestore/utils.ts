@@ -20,7 +20,6 @@ export const getTestEnv = () => testEnv;
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const firestoreRulesPath = `${__dirname}/../../emulator/firestore.rules`;
-console.log(firestoreRulesPath);
 
 /**
  * テスト設定を読み込みする

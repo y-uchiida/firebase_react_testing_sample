@@ -4,7 +4,6 @@ import firebaseTestingEmulatorSettings from '../../emulator/firebase.json';
 
 // 自動テスト用のfirestore エミュレータホスト
 process.env.FIRESTORE_EMULATOR_HOST = `127.0.0.1:${firebaseTestingEmulatorSettings.emulators.firestore.port}`;
-console.log(process.env.FIRESTORE_EMULATOR_HOST);
 
 describe('firestore.rules', () => {
 	// 自動テスト用の環境を起動する
