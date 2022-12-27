@@ -26,10 +26,8 @@ const firestoreRulesPath = `${__dirname}/../../emulator/firestore.rules`;
  */
 export const initializeTestEnvironment = async () => {
 	testEnv = await _initializeTestEnvironment({
-		// projectId: projectID,
 		projectId: testEnvSettings.projectID,
 		firestore: {
-			// rules: readFileSync('tests/emulator/firestore.rules', 'utf8'),
 			rules: readFileSync(firestoreRulesPath, 'utf8'),
 			port: testEnvSettings.emulators.firestore.port,
 			host: '127.0.0.1'
