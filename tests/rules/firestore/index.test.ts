@@ -1,7 +1,10 @@
+import { usersTest } from "./collections/cases/user.rules";
 import { initializeTestEnvironment, getTestEnv } from "./utils";
+import firebaseTestingEmulatorSettings from '../../emulator/firebase.json';
 
-// 自動テスト中に起動させるエミュレータのポートの割り当て
-process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8880';
+// 自動テスト用のfirestore エミュレータホスト
+process.env.FIRESTORE_EMULATOR_HOST = `127.0.0.1:${firebaseTestingEmulatorSettings.emulators.firestore.port}`;
+console.log(process.env.FIRESTORE_EMULATOR_HOST);
 
 describe('firestore.rules', () => {
 	// 自動テスト用の環境を起動する
@@ -20,4 +23,5 @@ describe('firestore.rules', () => {
 	});
 
 	// 以降、コレクションごとにテストケースをインポートする
+	usersTest();
 });

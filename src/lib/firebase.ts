@@ -1,34 +1,55 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+import { firebaseConfig, IS_EMULATED, IS_TESTING } from "@/config/env";
 
-/* firebase SDK と Admin SDK の Timestamp 型の差分を消す
- */
+import { FirebaseOptions, initializeApp } from "firebase/app";
+import { connectStorageEmulator, getStorage } from 'firebase/storage';
+import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
+import {
+	connectAuthEmulator,
+	getAuth,
+	GoogleAuthProvider,
+} from 'firebase/auth';
+import firebaseEmulatorSettings from '../../firebase.json';
+import firebaseTestingEmulatorSettings from '../../firebase.json';
+
 import { omit, merge } from 'lodash-es';
 import {
 	Timestamp,
 	DocumentData,
-	QueryDocumentSnapshot,
 	SnapshotOptions,
 	FirestoreDataConverter,
 	PartialWithFieldValue,
+	getFirestore,
+	connectFirestoreEmulator,
 } from 'firebase/firestore';
 
+
+/* firebase SDK と Admin SDK の Timestamp 型の差分を消す
+ */
 export { Timestamp };
 
-/* .env で設定したfirebase の設定を読み込む */
-const firebaseConfig = {
-	apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-	authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-	databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-	projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-	storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-	messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-	appId: import.meta.env.VITE_FIREBASE_APP_ID,
-	measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
-};
-
 /* 設定したコンフィグのオブジェクトを読み込んで、firebaseを初期化する */
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+/* 初期化後、機能別にモジュール化されたオブジェクトをエクスポートする */
+const db = getFirestore(app);
+// const storage = getStorage(app);
+// const functions = getFunctions(app);
+// const auth = getAuth(app);
+// const googleAuthProvider = new GoogleAuthProvider();
+
+/* エミュレータ上で動作している場合は、接続先をエミュレータに切り替える */
+const isEmulating = IS_EMULATED;
+const isTesting = IS_TESTING;
+if (isEmulating) {
+	const { emulators } = isTesting ? firebaseTestingEmulatorSettings : firebaseEmulatorSettings;
+	connectFirestoreEmulator(db, 'localhost', emulators.firestore.port);
+	// connectStorageEmulator(storage, 'localhost', emulators.storage.port);
+	// connectFunctionsEmulator(functions, 'localhost', emulators.functions.port);
+	// connectAuthEmulator(auth, `http://localhost:${emulators.auth.port}/`);
+}
+
+// export { firebaseConfig, app, auth, storage, functions, googleAuthProvider };
+export { app, /*auth,*/ /*storage,*/ /*functions,*/ /*googleAuthProvider*/ };
 
 /* firestore から取得したものは、data() と id別々のプロパティになるので、
  * data() の中にid が含まれるようにする

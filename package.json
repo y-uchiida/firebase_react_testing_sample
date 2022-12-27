@@ -5,9 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "vitest --mode testing",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && firebase deploy --except functions"
+    "deploy": "npm run build && firebase deploy --except functions",
+    "emulator:serve": "firebase emulators:start --import=data/firebase --export-on-exit=data/firebase",
+    "emulator:testing": "cd tests/emulator && firebase emulators:start"
   },
   "dependencies": {
     "firebase": "^9.15.0",
