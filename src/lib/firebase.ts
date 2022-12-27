@@ -13,7 +13,6 @@ import firebaseTestingEmulatorSettings from '../../firebase.json';
 
 import { omit, merge } from 'lodash-es';
 import {
-	Timestamp,
 	DocumentData,
 	SnapshotOptions,
 	FirestoreDataConverter,
@@ -25,13 +24,13 @@ import {
 
 /* firebase SDK と Admin SDK の Timestamp 型の差分を消す
  */
-export { Timestamp };
+export { Timestamp } from 'firebase/firestore';
 
 /* 設定したコンフィグのオブジェクトを読み込んで、firebaseを初期化する */
 const app = initializeApp(firebaseConfig);
 
 /* 初期化後、機能別にモジュール化されたオブジェクトをエクスポートする */
-const db = getFirestore(app);
+const firestore = getFirestore(app);
 // const storage = getStorage(app);
 // const functions = getFunctions(app);
 // const auth = getAuth(app);
@@ -42,14 +41,14 @@ const isEmulating = IS_EMULATED;
 const isTesting = IS_TESTING;
 if (isEmulating) {
 	const { emulators } = isTesting ? firebaseTestingEmulatorSettings : firebaseEmulatorSettings;
-	connectFirestoreEmulator(db, 'localhost', emulators.firestore.port);
+	connectFirestoreEmulator(firestore, 'localhost', emulators.firestore.port);
 	// connectStorageEmulator(storage, 'localhost', emulators.storage.port);
 	// connectFunctionsEmulator(functions, 'localhost', emulators.functions.port);
 	// connectAuthEmulator(auth, `http://localhost:${emulators.auth.port}/`);
 }
 
 // export { firebaseConfig, app, auth, storage, functions, googleAuthProvider };
-export { app, /*auth,*/ /*storage,*/ /*functions,*/ /*googleAuthProvider*/ };
+export { app, firestore, /*auth,*/ /*storage,*/ /*functions,*/ /*googleAuthProvider*/ };
 
 /* firestore から取得したものは、data() と id別々のプロパティになるので、
  * data() の中にid が含まれるようにする

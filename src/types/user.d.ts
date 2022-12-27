@@ -1,4 +1,4 @@
-import { Timestamp } from '@/lib/firebase';
+import { Timestamp } from "@/lib/firebase";
 
 export type UserDocumentData = {
 	createdAt: Timestamp,
