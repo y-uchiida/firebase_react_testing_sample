@@ -47,6 +47,6 @@ export const setCollection = <T>(
 	instances: WithId<T>[]
 ) => Promise.all(
 	instances.map((_) => {
-		ref.doc(_.id).set(getConverter<T>().toFirestore(_));
+		return ref.doc(_.id).set(getConverter<T>().toFirestore(_));
 	})
 );
