@@ -99,4 +99,39 @@ export const usersTest = () => {
 			});
 		});
 	});
+
+	describe('未認証の場合', () => {
+		let db: firebase.firestore.Firestore;
+
+		beforeEach(() => {
+			// 未認証状態のfirebase インスタンスを取得
+			db = env.unauthenticatedContext().firestore();
+		});
+
+		it('未認証の場合はuser ドキュメントを読み込み(get)できない', async () => {
+			const ref = db.collection('users').doc(other.id);
+			await assertFails(ref.get());
+		});
+
+		it('未認証の場合はusers コレクションを読み込み(list)できない', async () => {
+			const ref = db.collection('users');
+			await assertFails(ref.get());
+		});
+
+		it('未認証状態の場合はuser ドキュメントを作成できない', async () => {
+			const ref = db.collection('users');
+			const newUser = userFactory.build();
+			await assertFails(ref.add(newUser));
+		});
+
+		it('未認証状態の場合はuser ドキュメントを更新できない', async () => {
+			const ref = db.collection('users').doc(other.id);
+			await assertFails(ref.update({ name: 'new name' }));
+		});
+
+		it('未認証状態の場合はuser ドキュメントを削除できない', async () => {
+			const ref = db.collection('users').doc(other.id);
+			await assertFails(ref.delete());
+		});
+	});
 };
