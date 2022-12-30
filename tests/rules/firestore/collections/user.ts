@@ -31,6 +31,13 @@ export const usersTest = () => {
 	});
 
 	describe('認証済みの場合', () => {
+
+		it('users コレクションの一覧を読み込みできる(list)', async () => {
+			const db = env.authenticatedContext(user.id).firestore();
+			const ref = db.collection('users');
+			await assertSucceeds(ref.get());
+		});
+
 		describe('認証中のユーザーのデータへの操作', () => {
 			let db: firebase.firestore.Firestore;
 			// 指定のユーザーとして認証した状態のfirestore インスタンスを取得
@@ -60,6 +67,35 @@ export const usersTest = () => {
 			it('認証ユーザーが自身のuser ドキュメントを削除できる', async () => {
 				const ref = db.collection('users').doc(user.id);
 				await assertSucceeds(ref.delete());
+			});
+		});
+
+		describe('認証中のユーザー以外のデータへの操作', () => {
+			let db: firebase.firestore.Firestore;
+			// 指定のユーザーとして認証した状態のfirestore インスタンスを取得
+			beforeEach(() => {
+				db = env.authenticatedContext(user.id).firestore();
+			});
+
+			test('認証ユーザー以外のデータを読み込みできる(get)', async () => {
+				const ref = db.collection('users').doc(other.id);
+				await assertSucceeds(ref.get());
+			});
+
+			test('認証ユーザー以外のuser ドキュメントは作成できない', async () => {
+				const newUser = userFactory.build();
+				const ref = db.collection('users');
+				await assertFails(ref.doc(newUser.id).set(newUser));
+			});
+
+			test('認証ユーザー以外のuser ドキュメントは更新できない', async () => {
+				const ref = db.collection('users');
+				await assertFails(ref.doc(other.id).update({ name: '名前を変更' }))
+			});
+
+			test('認証ユーザー以外のuser ドキュメントは削除できない', async () => {
+				const ref = db.collection('users');
+				await assertFails(ref.doc(other.id).delete());
 			});
 		});
 	});
