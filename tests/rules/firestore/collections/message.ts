@@ -13,6 +13,7 @@ import { messageFactory } from '@/../tests/factories/message';
 import { WithId } from '@/lib/firebase';
 import { UserDocumentData } from '@/types/user';
 import { MessageDocumentData } from '@/types/message';
+import { build } from 'vite';
 
 // テストケース内で利用する情報
 let user: WithId<UserDocumentData>;
@@ -80,6 +81,26 @@ export const messageTest = () => {
 			it('認証ユーザーが自身のmessage を削除できる', async () => {
 				const ref = db.collection('messages').doc(userMessage.id);
 				await assertSucceeds(ref.delete());
+			});
+		});
+
+		describe('認証中のユーザー以外のmessage への操作', () => {
+			it('認証ユーザー以外のmessage ドキュメントを読み込み(get) できる', async () => {
+				const ref = db.collection('messages').doc(otherMessage.id);
+				await assertSucceeds(ref.get());
+			});
+			it('認証ユーザー以外のmessage ドキュメントは作成できない', async () => {
+				const newMessage = messageFactory.build({ senderId: other.id });
+				const ref = db.collection('messages');
+				await assertFails(ref.add(newMessage));
+			});
+			it('認証ユーザー以外のmessage ドキュメントは更新できない', async () => {
+				const ref = db.collection('messages').doc(otherMessage.id);
+				await assertFails(ref.update({ content: 'updated' }));
+			});
+			it('認証ユーザー以外のmessage ドキュメントは削除できない', async () => {
+				const ref = db.collection('messages').doc(otherMessage.id);
+				await assertFails(ref.delete());
 			});
 		});
 
