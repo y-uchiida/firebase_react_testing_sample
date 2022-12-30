@@ -26,7 +26,6 @@ jobs:
         with:
           java-version: ${{ matrix.JDK-version }}
           distribution: "temurin"
-          cache: gradle
 
       - name: パッケージインストール
         run: npm install
