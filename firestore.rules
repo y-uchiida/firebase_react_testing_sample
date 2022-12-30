@@ -14,6 +14,12 @@ service cloud.firestore {
       allow write: if isOwn(uid);
     }
 
+    match /messages/{uid} {
+      allow read: if isLoggedIn();
+      allow create: if isOwn(request.resource.data.senderId);
+      allow update, delete: if isOwn(resource.data.senderId);
+    }
+
     match /{document=**} {
       allow read, write: if false
     }

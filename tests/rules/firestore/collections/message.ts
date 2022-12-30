@@ -50,6 +50,41 @@ export const messageTest = () => {
 		});
 	});
 
+	describe('認証済みの場合', () => {
+		let db: firebase.firestore.Firestore;
+
+		beforeEach(() => {
+			db = env.authenticatedContext(user.id).firestore();
+		});
+
+		it('認証済みの場合はmessage コレクションを読み込み(list) できる', async () => {
+			const ref = db.collection('messages');
+			await assertSucceeds(ref.get());
+		});
+
+		describe('認証中のユーザーのmessage への操作', () => {
+			it('認証ユーザーのmessage ドキュメントを読み込み(get) できる', async () => {
+				const ref = db.collection('messages').doc(userMessage.id);
+				await assertSucceeds(ref.get());
+			});
+
+			it('認証ユーザーが自身のmessage を追加できる', async () => {
+				const newMessage = messageFactory.build({ senderId: user.id });
+				const ref = db.collection('messages');
+				await assertSucceeds(ref.add(newMessage));
+			});
+			it('認証ユーザーが自身のmessage を更新できる', async () => {
+				const ref = db.collection('messages').doc(userMessage.id);
+				await assertSucceeds(ref.update({ content: 'updated' }));
+			});
+			it('認証ユーザーが自身のmessage を削除できる', async () => {
+				const ref = db.collection('messages').doc(userMessage.id);
+				await assertSucceeds(ref.delete());
+			});
+		});
+
+	});
+
 	describe('未認証の場合', () => {
 		let db: firebase.firestore.Firestore;
 
