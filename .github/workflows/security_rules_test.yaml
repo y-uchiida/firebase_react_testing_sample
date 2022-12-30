@@ -3,22 +3,30 @@ name: security_rules_test
 on: [pull_request, workflow_dispatch]
 
 jobs:
-  test:
+  security_rules_test:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [16.X]
+        node-version: [16.x]
+        JDK-version: ["11"]
 
     steps:
       - name: リポジトリのチェックアウト
         uses: actions/checkout@v3
 
-      - name: Node.js ${{ matrix.node-version }} セットアップ
+      - name: Node.js セットアップ
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+
+      - name: Java JDK をセットアップ
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.JDK-version }}
+          distribution: "temurin"
+          cache: gradle
 
       - name: パッケージインストール
         run: npm install
@@ -26,21 +34,13 @@ jobs:
       - name: firebase-tools をインストール
         run: npm install firebase-tools
 
-      - name: エミュレータの起動
-        run: npm run emulator:testing &
+      - name: エミュレータの起動, テスト実行
+        run: cd tests/emulator && npx firebase emulators:exec "vitest --root $GITHUB_WORKSPACE --silent"
 
-      - name: エミュレータの起動待機
-        run: sleep 10
-
-      - name: テスト実行
-        run: npm run test
-
-      - name: エミュレータのレポートの待機
-        run: sleep 10
-
-      - name: coverage request
-        id: coverageRequest
-        uses: SonicGarden/firestore-rules-report-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          report-url: "http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
+      # エミュレータ動作中でないとレポートが取れないっぽいのでいったん保留
+      # - name: coverage request
+      #   id: coverageRequest
+      #   uses: SonicGarden/firestore-rules-report-action@v1
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     report-url: "http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
