@@ -1,6 +1,7 @@
 import { usersTest } from "./collections/user";
 import { initializeTestEnvironment, getTestEnv } from "./utils";
 import firebaseTestingEmulatorSettings from '../../emulator/firebase.json';
+import { messageTest } from "./collections/message";
 
 // 自動テスト用のfirestore エミュレータホスト
 process.env.FIRESTORE_EMULATOR_HOST = `127.0.0.1:${firebaseTestingEmulatorSettings.emulators.firestore.port}`;
@@ -23,4 +24,5 @@ describe('firestore.rules', () => {
 
 	// 以降、コレクションごとにテストケースをインポートする
 	usersTest();
+	messageTest();
 });
