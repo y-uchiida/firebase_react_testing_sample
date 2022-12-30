@@ -34,11 +34,11 @@ jobs:
         run: npm install firebase-tools
 
       - name: エミュレータの起動, テスト実行, カバレッジファイルの取得
-        run: cd tests/emulator && npx firebase emulators:exec "vitest --root $GITHUB_WORKSPACE --silent && curl -o firestoreSecurityRulesTestCoverageReport.json http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
+        run: cd tests/emulator && npx firebase emulators:exec "vitest --root $GITHUB_WORKSPACE --silent && curl -o $GITHUB_WORKSPACE/firestoreSecurityRulesTestCoverageReport.json http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
 
       - name: coverage request
         id: coverageRequest
         uses: y-uchiida/firestore-rules-report-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          report-url: "./firestoreSecurityRulesTestCoverageReport.json"
+          report-url: "$GITHUB_WORKSPACE/firestoreSecurityRulesTestCoverageReport.json"
