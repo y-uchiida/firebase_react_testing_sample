@@ -29,7 +29,6 @@ describe('AuthProvider', async () => {
 	/* 認証成功した場合にテキストを表示するテスト用コンポーネント */
 	const AuthenticatedScreen = () => {
 		const { currentUser } = useAuth();
-		console.log(currentUser);
 		return <div>{`${currentUser?.displayName} でログインできました`}</div>
 	};
 
@@ -72,6 +71,15 @@ describe('AuthProvider', async () => {
 
 		await waitFor(() =>
 			expect(screen.getByText('ログインしてください')).toBeInTheDocument()
+		);
+	});
+
+	it('ローディング中の場合、ローディング画面が表示される', async () => {
+		useAuthStateMock.mockReturnValue([null, true, undefined]);
+		render(<TestComponent />);
+
+		await waitFor(() =>
+			expect(screen.getByText('loading...')).toBeInTheDocument()
 		);
 	});
 });

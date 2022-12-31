@@ -4,6 +4,7 @@ import { useAuthState } from '@/hooks/useAuthState';
 import { signInGoogleWithPopup, signOut } from "@/lib/firebase";
 import { addUser, getUser } from "@/lib/user";
 import { LoginScreen } from "@/components/LoginScreen";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 type AuthContextValue = {
 	currentUser: User | null | undefined
@@ -22,8 +23,9 @@ export const AuthProvider = ({
 }: {
 	children: ReactNode;
 }) => {
-	const [currentUser] = useAuthState();
+	const [currentUser, loading] = useAuthState();
 
+	if (loading) return <LoadingScreen />
 	if (!currentUser) return <LoginScreen />
 
 	return (
