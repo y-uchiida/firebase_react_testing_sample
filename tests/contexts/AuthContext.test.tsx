@@ -48,7 +48,7 @@ describe('AuthProvider', async () => {
 		cleanupHook();
 	});
 
-	it('AuthContext からデータが取得できる', () => {
+	it('AuthContext からデータが取得できる', async () => {
 		const expectedUserName = 'test user'
 		useAuthStateMock.mockReturnValue([
 			{ uid: 'test-user-id', displayName: expectedUserName } as User,
@@ -58,7 +58,7 @@ describe('AuthProvider', async () => {
 
 		render(<TestComponent />);
 
-		waitFor(() =>
+		await waitFor(() =>
 			expect(
 				screen.getByText(`${expectedUserName} でログインできました`)
 			).toBeInTheDocument()
@@ -70,7 +70,7 @@ describe('AuthProvider', async () => {
 
 		render(<TestComponent />);
 
-		waitFor(() =>
+		await waitFor(() =>
 			expect(screen.getByText('ログインしてください')).toBeInTheDocument()
 		);
 	});
