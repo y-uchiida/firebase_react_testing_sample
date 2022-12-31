@@ -51,7 +51,7 @@ describe('AuthProvider', async () => {
 		const expectedUserName = 'test user'
 		useAuthStateMock.mockReturnValue([
 			{ uid: 'test-user-id', displayName: expectedUserName } as User,
-			true,
+			false,
 			undefined
 		]);
 
