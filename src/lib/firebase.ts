@@ -4,9 +4,12 @@ import { FirebaseOptions, initializeApp } from "firebase/app";
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import {
+	User,
 	connectAuthEmulator,
 	getAuth,
 	GoogleAuthProvider,
+	signInWithPopup,
+	signOut as _signOut
 } from 'firebase/auth';
 import firebaseEmulatorSettings from '../../firebase.json';
 import firebaseTestingEmulatorSettings from '../../firebase.json';
@@ -33,7 +36,7 @@ const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 // const storage = getStorage(app);
 // const functions = getFunctions(app);
-// const auth = getAuth(app);
+const auth = getAuth(app);
 // const googleAuthProvider = new GoogleAuthProvider();
 
 /* エミュレータ上で動作している場合は、接続先をエミュレータに切り替える */
@@ -44,11 +47,11 @@ if (isEmulating) {
 	connectFirestoreEmulator(firestore, 'localhost', emulators.firestore.port);
 	// connectStorageEmulator(storage, 'localhost', emulators.storage.port);
 	// connectFunctionsEmulator(functions, 'localhost', emulators.functions.port);
-	// connectAuthEmulator(auth, `http://localhost:${emulators.auth.port}/`);
+	connectAuthEmulator(auth, `http://localhost:${emulators.auth.port}/`);
 }
 
 // export { firebaseConfig, app, auth, storage, functions, googleAuthProvider };
-export { app, firestore, /*auth,*/ /*storage,*/ /*functions,*/ /*googleAuthProvider*/ };
+export { app, firestore, auth, /*storage,*/ /*functions,*/ /*googleAuthProvider*/ };
 
 /* firestore から取得したものは、data() と id別々のプロパティになるので、
  * data() の中にid が含まれるようにする
@@ -74,3 +77,10 @@ export const getConverter = <T>(): FirestoreDataConverter<WithId<T>> => ({
 	},
 });
 
+export const signInGoogleWithPopup = async () => {
+	const provider = new GoogleAuthProvider();
+
+	return signInWithPopup(auth, provider);
+};
+
+export const signOut = async () => _signOut(auth);
