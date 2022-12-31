@@ -42,7 +42,7 @@ jobs:
       # 出力する内容をファイルに保持しておき、次のStep でコメントを追加する
       - name: coverage request
         id: coverageRequest
-        uses: y-uchiida/firestore-rules-report-action
+        uses: y-uchiida/firestore-rules-report-action@v0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           report-url: "${{github.workspace}}/firestoreSecurityRulesTestCoverageReport.json"
