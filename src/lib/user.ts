@@ -45,15 +45,15 @@ export const getUser = async (uid: string) => {
 export const addUser = async ({
 	uid,
 	displayName,
-	photoUrl
+	photoURL
 }: {
 	uid: string,
 	displayName: string | null,
-	photoUrl: string | null
+	photoURL: string | null
 }) => {
 	const user = {
 		name: displayName,
-		photoUrl,
+		photoUrl: photoURL,
 		createdAt: serverTimestamp(),
 	};
 	await setDoc(doc(usersRef(), uid), user);
