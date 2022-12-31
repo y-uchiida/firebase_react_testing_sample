@@ -28,7 +28,7 @@ jobs:
           distribution: "temurin"
 
       - name: パッケージインストール
-        run: npm install
+        run: npm ci
 
       - name: firebase-tools をインストール
         run: npm install firebase-tools
