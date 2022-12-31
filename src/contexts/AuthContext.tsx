@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { useAuthState } from '@/hooks/useAuthState';
 
 type AuthContextValue = {
@@ -26,4 +26,10 @@ export const AuthProvider = ({
 			{children}
 		</AuthContext.Provider>
 	);
+}
+
+export const useAuth = () => {
+	const { currentUser } = useContext(AuthContext);
+
+	return { currentUser };
 }
