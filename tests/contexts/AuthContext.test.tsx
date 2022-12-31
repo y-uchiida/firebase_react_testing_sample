@@ -2,12 +2,13 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { useAuthState } from '@/hooks/useAuthState';
 import {
 	render,
+	renderHook,
 	cleanup,
 	screen,
 	waitFor,
 } from '@testing-library/react';
 import {
-	renderHook,
+	// renderHook, // 2022.12.31 時点でrender の警告が出るので、 @testing-library/react のrenderHookを使う
 	act as actHook,
 	cleanup as cleanupHook,
 } from '@testing-library/react-hooks';
