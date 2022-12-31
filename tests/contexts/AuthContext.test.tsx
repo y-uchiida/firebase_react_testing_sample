@@ -47,7 +47,7 @@ describe('AuthProvider', async () => {
 		cleanupHook();
 	});
 
-	it('AuthContext からデータが取得できる', async () => {
+	it('認証済みの場合、AuthContext から認証ユーザーのデータが取得できる', async () => {
 		const expectedUserName = 'test user'
 		useAuthStateMock.mockReturnValue([
 			{ uid: 'test-user-id', displayName: expectedUserName } as User,
@@ -74,7 +74,7 @@ describe('AuthProvider', async () => {
 		);
 	});
 
-	it('ローディング中の場合、ローディング画面が表示される', async () => {
+	it('useAuthState が読み込み中の場合、ローディング画面が表示される', async () => {
 		useAuthStateMock.mockReturnValue([null, true, undefined]);
 		render(<TestComponent />);
 
