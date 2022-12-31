@@ -29,6 +29,7 @@ describe('AuthProvider', async () => {
 	/* 認証成功した場合にテキストを表示するテスト用コンポーネント */
 	const AuthenticatedScreen = () => {
 		const { currentUser } = useAuth();
+		console.log(currentUser);
 		return <div>{`${currentUser?.displayName} でログインできました`}</div>
 	};
 
@@ -44,6 +45,7 @@ describe('AuthProvider', async () => {
 		/* モック関数の状態をクリアする */
 		vi.resetAllMocks();
 		cleanup();
+		cleanupHook();
 	});
 
 	it('AuthContext からデータが取得できる', () => {
@@ -56,11 +58,21 @@ describe('AuthProvider', async () => {
 
 		render(<TestComponent />);
 
-		waitFor(() => {
+		waitFor(() =>
 			expect(
 				screen.getByText(`${expectedUserName} でログインできました`)
-			).toBeTruthy();
-		});
+			).toBeTruthy()
+		);
+	});
+
+	it('未認証の場合はログイン画面が表示される', async () => {
+		useAuthStateMock.mockReturnValue([null, false, undefined]);
+
+		render(<TestComponent />);
+
+		waitFor(() =>
+			expect(screen.getByText('ログインしてください')).toBeTruthy()
+		);
 	});
 });
 
