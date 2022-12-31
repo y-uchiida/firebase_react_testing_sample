@@ -22,12 +22,15 @@ import {
 	PartialWithFieldValue,
 	getFirestore,
 	connectFirestoreEmulator,
+	serverTimestamp as _serverTimeStamp, // SDK 間の型定義の違いを埋めるための処置
+	Timestamp,
 } from 'firebase/firestore';
 
 
 /* firebase SDK と Admin SDK の Timestamp 型の差分を消す
  */
 export { Timestamp } from 'firebase/firestore';
+export const serverTimestamp = _serverTimeStamp as unknown as () => Timestamp;
 
 /* 設定したコンフィグのオブジェクトを読み込んで、firebaseを初期化する */
 const app = initializeApp(firebaseConfig);
