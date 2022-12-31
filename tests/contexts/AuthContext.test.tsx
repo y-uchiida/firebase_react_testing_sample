@@ -61,7 +61,7 @@ describe('AuthProvider', async () => {
 		waitFor(() =>
 			expect(
 				screen.getByText(`${expectedUserName} でログインできました`)
-			).toBeTruthy()
+			).toBeInTheDocument()
 		);
 	});
 
@@ -71,7 +71,7 @@ describe('AuthProvider', async () => {
 		render(<TestComponent />);
 
 		waitFor(() =>
-			expect(screen.getByText('ログインしてください')).toBeTruthy()
+			expect(screen.getByText('ログインしてください')).toBeInTheDocument()
 		);
 	});
 });
