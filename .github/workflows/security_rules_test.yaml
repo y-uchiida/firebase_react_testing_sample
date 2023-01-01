@@ -6,6 +6,10 @@ jobs:
   security_rules_test:
     runs-on: ubuntu-latest
 
+    # google auth 用設定
+    permissions:
+      id-token: "write"
+
     strategy:
       matrix:
         node-version: [16.x]
@@ -27,13 +31,20 @@ jobs:
           java-version: ${{ matrix.JDK-version }}
           distribution: "temurin"
 
+      - name: Google Cloud で認証
+      - id: auth
+        uses: google-github-actions/auth@v0
+        with:
+          workload_identity_provider: "projects/1158869054/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
+          service_account: "fir-rea-tes-sam-ci-user@fir-react-testing-sample.iam.gserviceaccount.com"
+
       - name: パッケージインストール
         run: |
           npm config set legacy-peer-deps true
           npm ci
 
       - name: firebase-tools をインストール
-        run: npm install firebase-tools@^9.16.1
+        run: npm install firebase-tools
 
       - name: エミュレータの起動, テスト実行, カバレッジファイルの取得
         run: cd tests/emulator && firebase emulators:exec "npx vitest --mode testing --root $GITHUB_WORKSPACE --silent && curl -o $GITHUB_WORKSPACE/firestoreSecurityRulesTestCoverageReport.json http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
