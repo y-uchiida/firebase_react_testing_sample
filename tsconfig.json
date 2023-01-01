@@ -20,7 +20,8 @@
       "@/*": ["*"]
     },
     "types": [
-      "vitest/globals" // Vitest の型が読み込まれるように設定
+      "vitest/globals", // Vitest の型が読み込まれるように設定
+      "@types/testing-library__jest-dom" // expect の拡張メソッドが見つからないので追記しておく
     ]
   },
   "include": ["src", "tests", "./.eslintrc.cjs"],
