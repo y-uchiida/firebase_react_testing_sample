@@ -46,7 +46,19 @@ jobs:
       - name: firebase-tools をインストール
         run: npm install firebase-tools
 
+      # ローカル環境では.envを使っていたがactions では利用できないので、 repository secrets から取得する
       - name: エミュレータの起動, テスト実行, カバレッジファイルの取得
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_DATABASE_URL: ${{ secrets.VITE_FIREBASE_DATABASE_URL }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID_TESTING }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
+          VITE_IS_EMULATED: ${{ secrets.VITE_IS_EMULATED }}
+          VITE_IS_TESTING: ${{ secrets.VITE_IS_TESTING }}
         run: cd tests/emulator && npx firebase emulators:exec "npx vitest --mode testing --root $GITHUB_WORKSPACE --silent && curl -o $GITHUB_WORKSPACE/firestoreSecurityRulesTestCoverageReport.json http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
 
       # SonicGarden/firestore-rules-report-action をもとに、ローカルに取得した
