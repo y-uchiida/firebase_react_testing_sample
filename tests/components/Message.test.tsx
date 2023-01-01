@@ -20,21 +20,21 @@ const sender = userFactory.build({
 
 // usersContext の動作テストは別のテストファイルで行うため、
 // ここではモックを使って返り値を得る
-vi.mock('@/context/UsersContext', () => {
+let useUsersValue = {
+	usersById: { 'user-id': sender }, loading: true
+};
+vi.mock('@/contexts/UsersContext', () => {
 	return {
-		useUsers: { usersById: { 'user-id': [sender] } },
-	}
+		useUsers: () => useUsersValue
+	};
 });
 
 describe('Message', async () => {
 	const { Message } = await import('@/components/Message');
 
-	afterEach(() => cleanup());
-
-	vi.mock('@/context/UserContext', () => {
-		return {
-			useUsers: { usersById: { 'user-id': [sender] } },
-		};
+	afterEach(() => {
+		cleanup();
+		vi.resetAllMocks();
 	});
 
 	const message = messageFactory.build({
@@ -44,39 +44,54 @@ describe('Message', async () => {
 	});
 
 	it('読み込み中はloading メッセージが表示される', () => {
+		useUsersValue = {
+			usersById: { 'user-id': sender }, loading: true
+		};
 		render(<Message message={message} />);
 
 		expect(screen.getByText('loading...')).toBeInTheDocument();
 	});
 
-	it('メッセージを送信したユーザーのアイコン画像が表示されている', () => {
+	it('メッセージを送信したユーザーのアイコン画像が表示されている', async () => {
+		useUsersValue = {
+			usersById: { 'user-id': sender }, loading: false
+		};
 		render(<Message message={message} />);
 
-		waitFor(() =>
+		await waitFor(() =>
 			expect(screen.getByRole('img').getAttribute('src')).toBe('user-photo-url')
 		);
 	});
 
-	it('メッセージを送信したユーザーの名前が表示されている', () => {
+	it('メッセージを送信したユーザーの名前が表示されている', async () => {
+		useUsersValue = {
+			usersById: { 'user-id': sender }, loading: false
+		};
 		render(<Message message={message} />);
 
-		waitFor(() =>
+		await waitFor(() =>
 			expect(screen.getByText('test user')).toBeInTheDocument()
 		);
 	});
 
-	it('メッセージを送信した時間が表示されている', () => {
+	it('メッセージを送信した時間が表示されている', async () => {
+		useUsersValue = {
+			usersById: { 'user-id': sender }, loading: false
+		};
 		render(<Message message={message} />)
 
-		waitFor(() =>
+		await waitFor(() =>
 			expect(screen.getByText('2022-07-01 00:00')).toBeInTheDocument()
 		);
 	});
 
-	it('メッセージの内容が表示されている', () => {
+	it('メッセージの内容が表示されている', async () => {
+		useUsersValue = {
+			usersById: { 'user-id': sender }, loading: false
+		};
 		render(<Message message={message} />)
 
-		waitFor(() =>
+		await waitFor(() =>
 			expect(screen.getByText('test message content')).toBeInTheDocument()
 		);
 	});
