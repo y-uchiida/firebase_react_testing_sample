@@ -13,6 +13,7 @@
     "emulator:testing": "cd tests/emulator && firebase emulators:start"
   },
   "dependencies": {
+    "date-fns": "^2.29.3",
     "firebase": "^9.15.0",
     "lodash-es": "^4.17.21",
     "react": "^18.2.0",
