@@ -6,10 +6,6 @@ jobs:
   security_rules_test:
     runs-on: ubuntu-latest
 
-    # google auth 用設定
-    # permissions:
-    #   id-token: "write"
-
     strategy:
       matrix:
         node-version: [16.x]
@@ -30,13 +26,6 @@ jobs:
         with:
           java-version: ${{ matrix.JDK-version }}
           distribution: "temurin"
-
-      # - name: Google Cloud で認証
-      #   id: google_auth
-      #   uses: google-github-actions/auth@v0
-      #   with:
-      #     workload_identity_provider: "projects/1158869054/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
-      #     service_account: "fir-rea-tes-sam-ci-user@fir-react-testing-sample.iam.gserviceaccount.com"
 
       - name: パッケージインストール
         run: |
