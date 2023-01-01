@@ -47,7 +47,7 @@ jobs:
         run: npm install firebase-tools
 
       - name: エミュレータの起動, テスト実行, カバレッジファイルの取得
-        run: cd tests/emulator && firebase emulators:exec "npx vitest --mode testing --root $GITHUB_WORKSPACE --silent && curl -o $GITHUB_WORKSPACE/firestoreSecurityRulesTestCoverageReport.json http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
+        run: cd tests/emulator && npx firebase emulators:exec "npx vitest --mode testing --root $GITHUB_WORKSPACE --silent && curl -o $GITHUB_WORKSPACE/firestoreSecurityRulesTestCoverageReport.json http://localhost:8880/emulator/v1/projects/demo-fir-react-testing-sample:ruleCoverage"
 
       # SonicGarden/firestore-rules-report-action をもとに、ローカルに取得した
       # セキュリティルールのカバレッジファイルを利用するCustom Action
