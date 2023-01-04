@@ -3,7 +3,9 @@ import {
 	collection,
 	query,
 	orderBy,
-	Firestore
+	Firestore,
+	DocumentReference,
+	addDoc
 } from 'firebase/firestore';
 import {
 	app,
@@ -26,3 +28,10 @@ export const messagesRef = () => {
 
 export const messagesQuery = () =>
 	query(messagesRef(), orderBy('createdAt', 'asc'));
+
+export const addMessage = async (
+	message: MessageDocumentData
+): Promise<DocumentReference<MessageDocumentData>> => {
+	console.log('actual addMessage');
+	return addDoc(messagesRef(), message);
+};
