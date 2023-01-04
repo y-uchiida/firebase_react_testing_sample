@@ -1,5 +1,5 @@
 import { usersTest } from "./collections/user";
-import { initializeTestEnvironment, getTestEnv } from "./utils";
+import { initializeTestEnvironment, getTestEnv } from "@/../tests/utils";
 import firebaseTestingEmulatorSettings from '../../emulator/firebase.json';
 import { messageTest } from "./collections/message";
 

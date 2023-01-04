@@ -7,7 +7,7 @@ import {
 	RulesTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import firebase from 'firebase/compat/app';
-import { getTestEnv, setCollection } from '../utils';
+import { getTestEnv, setCollection } from '../../../utils';
 
 // テストケース内で利用するユーザー情報
 let user: WithId<UserDocumentData>;

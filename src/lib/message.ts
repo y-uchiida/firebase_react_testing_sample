@@ -2,9 +2,12 @@ import {
 	getFirestore,
 	collection,
 	query,
-	orderBy
+	orderBy,
+	Firestore
 } from 'firebase/firestore';
 import {
+	app,
+	firestore,
 	getConverter
 } from '@/lib/firebase';
 import { MessageDocumentData } from '@/types/message';
@@ -15,9 +18,10 @@ import { MessageDocumentData } from '@/types/message';
  * 必要なタイミングで関数を実行して返り値を受け取ること
  */
 export const messagesRef = () => {
-	return collection(getFirestore(), 'messages').withConverter(
+	const collectionRef = collection(firestore, 'messages').withConverter(
 		getConverter<MessageDocumentData>()
 	);
+	return collectionRef;
 }
 
 export const messagesQuery = () =>

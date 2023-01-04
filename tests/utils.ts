@@ -5,7 +5,7 @@ import {
 import { readFileSync } from 'fs';
 import firebase from 'firebase/compat/app';
 import { getConverter, WithId } from '@/lib/firebase';
-import testEnvSettings from '../../emulator/firebase.json';
+import testEnvSettings from './emulator/firebase.json';
 import path from "node:path";
 import url from "node:url";
 
@@ -19,14 +19,16 @@ export const getTestEnv = () => testEnv;
 /* firestore.rules のパス */
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const firestoreRulesPath = `${__dirname}/../../emulator/firestore.rules`;
+const firestoreRulesPath = `${__dirname}/emulator/firestore.rules`;
 
 /**
  * テスト設定を読み込みする
  */
-export const initializeTestEnvironment = async () => {
+export const initializeTestEnvironment = async (
+	projectId: string = testEnvSettings.projectID
+) => {
 	testEnv = await _initializeTestEnvironment({
-		projectId: testEnvSettings.projectID,
+		projectId,
 		firestore: {
 			rules: readFileSync(firestoreRulesPath, 'utf8'),
 			port: testEnvSettings.emulators.firestore.port,

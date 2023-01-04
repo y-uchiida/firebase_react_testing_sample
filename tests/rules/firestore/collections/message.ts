@@ -7,7 +7,7 @@ import firebase from 'firebase/compat/app';
 import {
 	getTestEnv,
 	setCollection
-} from '@/../tests/rules/firestore/utils';
+} from '@/../tests/utils';
 import { userFactory } from '@/../tests/factories/user';
 import { messageFactory } from '@/../tests/factories/message';
 import { WithId } from '@/lib/firebase';
