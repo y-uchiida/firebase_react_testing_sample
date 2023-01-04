@@ -1,7 +1,11 @@
-import { usersTest } from "./collections/user";
-import { initializeTestEnvironment, getTestEnv } from "@/../tests/utils";
+import {
+	initializeTestEnvironment,
+	getTestEnv
+} from '@/../tests/utils';
+import {
+	messagesTest
+} from '@/../tests/queries/firestore/collections/messages';
 import firebaseTestingEmulatorSettings from '../../emulator/firebase.json';
-import { messageTest } from "./collections/message";
 
 // 自動テスト用のfirestore エミュレータホスト
 process.env.FIRESTORE_EMULATOR_HOST = `127.0.0.1:${firebaseTestingEmulatorSettings.emulators.firestore.port}`;
@@ -9,6 +13,7 @@ process.env.FIRESTORE_EMULATOR_HOST = `127.0.0.1:${firebaseTestingEmulatorSettin
 describe('firestore.rules', () => {
 	// 自動テスト用の環境を起動する
 	beforeAll(async () => {
+		// await initializeTestEnvironment('testable-firebase-sample-chat-queries-test');
 		await initializeTestEnvironment();
 	});
 
@@ -22,7 +27,6 @@ describe('firestore.rules', () => {
 		await getTestEnv().clearFirestore();
 	});
 
-	// 以降、コレクションごとにテストケースをインポートする
-	usersTest();
-	messageTest();
+	// messages コレクションのクエリのテスト
+	messagesTest();
 });
