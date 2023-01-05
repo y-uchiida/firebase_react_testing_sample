@@ -16,10 +16,10 @@ import url from "node:url";
 let testEnv: RulesTestEnvironment;
 export const getTestEnv = () => testEnv;
 
-/* firestore.rules のパス */
-
+/* rules ファイルのパスを絶対パス形式で変数に格納 */
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const firestoreRulesPath = `${__dirname}/emulator/firestore.rules`;
+const storageRulesPath = `${__dirname}/emulator/storage.rules`
 
 /**
  * テスト設定を読み込みする
@@ -32,6 +32,11 @@ export const initializeTestEnvironment = async (
 		firestore: {
 			rules: readFileSync(firestoreRulesPath, 'utf8'),
 			port: testEnvSettings.emulators.firestore.port,
+			host: '127.0.0.1'
+		},
+		storage: {
+			rules: readFileSync(storageRulesPath, 'utf8'),
+			port: testEnvSettings.emulators.storage.port,
 			host: '127.0.0.1'
 		}
 	});
