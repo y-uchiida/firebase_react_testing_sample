@@ -1,5 +1,5 @@
-import { Timestamp } from '../../lib/firebase';
-import type { WithId } from './firebase';
+import { Timestamp } from "../../lib/firebase";
+import type { WithId } from "./firebase";
 
 export type MessageDocumentData = {
 	createdAt: Timestamp,
