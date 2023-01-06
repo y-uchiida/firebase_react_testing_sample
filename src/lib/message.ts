@@ -15,7 +15,7 @@ import {
 	getConverter,
 	serverTimestamp
 } from '@/lib/firebase';
-import { MessageDocumentData } from '@/types/message';
+import { MessageDocumentData } from '@/shared/types/message';
 import { getStorage, ref, uploadBytes } from 'firebase/storage';
 
 export const collectionName = 'messages';

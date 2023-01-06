@@ -1,11 +1,10 @@
 import { Factory } from 'fishery';
-import { User } from '@/types/user';
+import { Timestamp } from 'firebase/firestore';
+import { User } from '@/shared/types/user';
 
-export const userFactory = Factory.define<User>(
-	({ sequence }) => ({
-		id: sequence.toString(),
-		createdAt: new Date(),
-		name: `テストユーザー ${sequence}`,
-		photoUrl: '',
-	})
-);
+export const userFactory = Factory.define<User>(({ sequence }) => ({
+	id: sequence.toString(),
+	createdAt: Timestamp.fromDate(new Date()),
+	name: `テストユーザー${sequence}`,
+	photoUrl: '',
+}));

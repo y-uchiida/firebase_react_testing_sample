@@ -10,10 +10,9 @@ import {
 } from '@/../tests/utils';
 import { userFactory } from '@/../tests/factories/user';
 import { messageFactory } from '@/../tests/factories/message';
-import { WithId } from '@/lib/firebase';
-import { UserDocumentData } from '@/types/user';
-import { MessageDocumentData } from '@/types/message';
-import { build } from 'vite';
+import { WithId } from '@/shared/types/firebase';
+import { UserDocumentData } from '@/shared/types/user';
+import { MessageDocumentData } from '@/shared/types/message';
 
 // テストケース内で利用する情報
 let user: WithId<UserDocumentData>;

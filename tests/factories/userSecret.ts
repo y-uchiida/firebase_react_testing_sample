@@ -1,11 +1,11 @@
 import { Factory } from 'fishery';
 import { Timestamp } from 'firebase/firestore';
-import { UserSecret } from '@/types/userSecrets';
+import { UserSecret } from '@/shared/types/userSecrets';
 
 export const userSecretFactory = Factory.define<UserSecret>(
 	({ sequence }) => ({
 		id: sequence.toString(),
-		createdAt: new Date(),
+		createdAt: Timestamp.fromDate(new Date()),
 		fcmToken: `token${sequence}`
 	})
 );

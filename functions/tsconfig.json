@@ -9,6 +9,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src", "tests", "./.eslintrc.js"],
-  "references": [{ "path": ["tsconfig.dev.json", "tsconfig.node.json"] }]
+  "include": ["src", "tests", "./.eslintrc.js"]
 }

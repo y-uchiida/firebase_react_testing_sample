@@ -1,6 +1,6 @@
 import { userFactory } from '@/../tests/factories/user';
 import { WithId } from '@/lib/firebase';
-import { UserDocumentData } from '@/types/user';
+import { UserDocumentData } from '@/shared/types/user';
 import {
 	assertSucceeds,
 	assertFails,

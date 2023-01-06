@@ -6,7 +6,7 @@ import {
 	setDoc
 } from 'firebase/firestore';
 import { getConverter, serverTimestamp } from '@/lib/firebase';
-import type { UserSecretDocumentData } from '@/types/userSecrets';
+import type { UserSecretDocumentData } from '@/shared/types/userSecrets';
 import { stringLength } from '@firebase/util';
 
 export const userSecretsRef = () => collection(

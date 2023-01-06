@@ -1,5 +1,5 @@
 import { useUsers } from '@/contexts/UsersContext';
-import { Message as MessageType } from '@/types/message';
+import { Message as MessageType } from '@/shared/types/message';
 import { LoadingScreen } from './LoadingScreen';
 import nonameIcon from '@/../assets/nonameIcon.png';
 import { format } from 'date-fns';
