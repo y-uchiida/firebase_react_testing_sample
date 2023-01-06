@@ -23,6 +23,16 @@ vi.mock('@/hooks/useAuthState', () => {
 	return { useAuthState: useAuthStateMock }
 });
 
+/**
+ * setUsrSecret をモックして戻り値をコントロールする
+ */
+const setUserSecretMock = vi.fn();
+vi.mock('@/lib/userSecret', () => {
+	return {
+		setUserSecret: setUserSecretMock,
+	};
+});
+
 describe('AuthProvider', async () => {
 	const { useAuth, AuthProvider } = await import('@/contexts/AuthContext');
 
@@ -95,12 +105,14 @@ vi.mock('@/lib/user', () => {
 
 const signInGoogleWithPopupMock = vi.fn();
 const signOutMock = vi.fn();
+const getFcmTokenMock = vi.fn();
 vi.mock('@/lib/firebase', async () => {
 	const firebase = await vi.importActual<Object>('@/lib/firebase');
 	return {
 		...firebase,
 		signInGoogleWithPopup: signInGoogleWithPopupMock,
-		signOut: signOutMock
+		signOut: signOutMock,
+		getFcmToken: getFcmTokenMock,
 	}
 });
 
@@ -125,12 +137,28 @@ describe('useAuth のテスト', async () => {
 		});
 		// 初回ログインの場合はusers コレクションにデータがないので isExist: false が返される
 		getUserMock.mockResolvedValue({ isExist: false });
+		getFcmTokenMock.mockResolvedValue('test-token');
 
 		await actHook(async () => {
 			await result.current.signInWithGoogle();
 		});
 
 		expect(addUserMock).toBeCalledWith(testUserData);
+
+		it('fcmToken が登録される', async () => {
+			const { result } = renderHook(() => {
+				return useAuth()
+			});
+
+			await actHook(async () => {
+				await result.current.signInWithGoogle();
+			});
+
+			expect(setUserSecretMock).toBeCalledWith(
+				'test-uid',
+				{ fcmToken: 'test-token' }
+			);
+		});
 	});
 
 	it('二回目以降のログインの場合、ユーザー情報は追加されない', async () => {
@@ -146,12 +174,28 @@ describe('useAuth のテスト', async () => {
 		});
 		// 2回目以降のログインの場合は isExist: true が返される
 		getUserMock.mockResolvedValue({ isExist: true });
+		getFcmTokenMock.mockResolvedValue('test-token');
 
 		await actHook(async () => {
 			await result.current.signInWithGoogle();
 		});
 
 		expect(addUserMock).not.toBeCalled();
+
+		it('fcmToken が更新される', async () => {
+			const { result } = renderHook(() => {
+				return useAuth();
+			});
+
+			await actHook(async () => {
+				result.current.signInWithGoogle();
+			});
+
+			expect(setUserSecretMock).toBeCalledWith(
+				'test-uid',
+				{ fcmToken: 'test-token' }
+			);
+		});
 	});
 
 	it('ログイン処理中にエラーが発生した場合は、認証済みの場合もログアウトされる', async () => {

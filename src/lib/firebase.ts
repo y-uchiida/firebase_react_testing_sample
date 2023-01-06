@@ -3,6 +3,7 @@ import { firebaseConfig, IS_EMULATED, IS_TESTING } from "@/config/env";
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
+import { getMessaging, getToken } from 'firebase/messaging';
 import {
 	User,
 	connectAuthEmulator,
@@ -87,3 +88,12 @@ export const signInGoogleWithPopup = async () => {
 };
 
 export const signOut = async () => _signOut(auth);
+
+/**
+ * プッシュ通知用のトークンを取得する
+ */
+export const getFcmToken = async () => {
+	return getToken(getMessaging(), {
+		vapidKey: import.meta.env.VITE_FIREBASE_MESSAGING_VAPID_KEY,
+	});
+};
