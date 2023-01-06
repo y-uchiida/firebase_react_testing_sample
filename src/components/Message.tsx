@@ -19,7 +19,7 @@ export const Message = ({ message }: Props) => {
 	return (
 		<div>
 			<div>
-				<img src={sender?.photoUrl || nonameIcon} alt="" />
+				<img alt="user-icon" src={sender?.photoUrl || nonameIcon} />
 				<span>{sender?.name || 'noname user'}</span>
 				<span>
 					{format(message.createdAt.toDate(), 'yyyy-MM-dd HH:mm')}

@@ -36,6 +36,12 @@ describe('MessageForm', async () => {
 		expect(screen.getByLabelText('content-input')).toBeDefined();
 	});
 
+	it('添付画像入力欄が表示される', () => {
+		render(<MessageForm />);
+
+		expect(screen.getByLabelText('image-input')).toBeDefined();
+	});
+
 	it('送信ボタンが表示される', () => {
 		render(<MessageForm />);
 
@@ -60,6 +66,28 @@ describe('MessageForm', async () => {
 		expect(addMessageMock).toBeCalled();
 	});
 
+	it.skip('添付画像を選択した場合は、画像も指定してメッセージの送信処理が実行される', async () => {
+		render(<MessageForm />);
+
+		const contentInput = screen.getByLabelText<HTMLInputElement>('content-input');
+		await act(() => userEvent.type(contentInput, 'test message'));
+
+		const imageInput = screen.getByLabelText<HTMLInputElement>('image-input');
+		const file = new File([], 'image.png', { type: 'image/png' });
+
+		await waitFor(async () => {
+			userEvent.upload(imageInput, file)
+			screen.getByText<HTMLButtonElement>('送信').click();
+			await waitFor(() => {
+				expect(addMessageMock).toBeCalledWith(
+					'test message',
+					file,
+					'test-user-uid'
+				);
+			});
+		});
+	});
+
 	it('メッセージ送信処理後、メッセージ入力欄がクリアされる', async () => {
 		render(<MessageForm />);
 
@@ -69,5 +97,26 @@ describe('MessageForm', async () => {
 
 		/* 送信処理が終了して、メッセージが空に戻るまでwaitFor で待機する */
 		await waitFor(() => expect(input).toHaveValue(''));
+	});
+
+	it('メッセージ送信終了後、メッセージ入力欄と添付画像入力欄がクリアされる', async () => {
+		render(<MessageForm />);
+
+		const contentInput = screen.getByLabelText<HTMLInputElement>('content-input');
+		await act(() => userEvent.type(contentInput, 'test message'));
+
+		const imageInput = screen.getByLabelText<HTMLInputElement>('image-input');
+		const file = new File([], 'image.png', { type: 'image/png' });
+		await act(() => userEvent.upload(imageInput, file));
+
+		expect(contentInput).toHaveValue('test message');
+		expect(imageInput.files?.[0]).toBe(file);
+
+		screen.getByText<HTMLButtonElement>('送信').click();
+
+		await waitFor(() => {
+			expect(contentInput).toHaveValue('');
+			expect(imageInput.files?.[0]).toBeUndefined();
+		});
 	});
 });

@@ -37,10 +37,10 @@ const app = initializeApp(firebaseConfig);
 
 /* 初期化後、機能別にモジュール化されたオブジェクトをエクスポートする */
 const firestore = getFirestore(app);
-// const storage = getStorage(app);
+const storage = getStorage(app);
 // const functions = getFunctions(app);
 const auth = getAuth(app);
-// const googleAuthProvider = new GoogleAuthProvider();
+const googleAuthProvider = new GoogleAuthProvider();
 
 /* エミュレータ上で動作している場合は、接続先をエミュレータに切り替える */
 const isEmulating = IS_EMULATED;
@@ -48,13 +48,13 @@ const isTesting = IS_TESTING;
 if (isEmulating) {
 	const { emulators } = isTesting ? firebaseTestingEmulatorSettings : firebaseEmulatorSettings;
 	connectFirestoreEmulator(firestore, 'localhost', emulators.firestore.port);
-	// connectStorageEmulator(storage, 'localhost', emulators.storage.port);
+	connectStorageEmulator(storage, 'localhost', emulators.storage.port);
 	// connectFunctionsEmulator(functions, 'localhost', emulators.functions.port);
 	connectAuthEmulator(auth, `http://localhost:${emulators.auth.port}/`);
 }
 
 // export { firebaseConfig, app, auth, storage, functions, googleAuthProvider };
-export { app, firestore, auth, /*storage,*/ /*functions,*/ /*googleAuthProvider*/ };
+export { app, firestore, auth, storage, /*functions,*/ googleAuthProvider };
 
 /* firestore から取得したものは、data() と id別々のプロパティになるので、
  * data() の中にid が含まれるようにする

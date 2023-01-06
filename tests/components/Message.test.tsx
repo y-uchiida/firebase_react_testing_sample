@@ -139,7 +139,7 @@ describe('Message', async () => {
 			render(<Message message={message} />);
 
 			await waitFor(() =>
-				expect(screen.getByRole('img').getAttribute('src')).toBe('user-photo-url')
+				expect(screen.getByAltText('user-icon').getAttribute('src')).toBe('user-photo-url')
 			);
 		});
 
@@ -184,7 +184,7 @@ describe('Message', async () => {
 			render(<Message message={message} />);
 
 			await waitFor(() =>
-				expect(screen.getByText('message-image')).toHaveAttribute('src', 'message-image-url')
+				expect(screen.getByAltText('message-image')).toHaveAttribute('src', 'message-image-url')
 			);
 		});
 	});
