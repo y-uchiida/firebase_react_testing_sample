@@ -5,14 +5,20 @@ import {
 	orderBy,
 	Firestore,
 	DocumentReference,
-	addDoc
+	addDoc,
+	doc,
+	setDoc
 } from 'firebase/firestore';
 import {
 	app,
 	firestore,
-	getConverter
+	getConverter,
+	serverTimestamp
 } from '@/lib/firebase';
 import { MessageDocumentData } from '@/types/message';
+import { getStorage, ref, uploadBytes } from 'firebase/storage';
+
+export const collectionName = 'messages';
 
 /**
  * messages コレクションのreference を返す  
@@ -29,9 +35,26 @@ export const messagesRef = () => {
 export const messagesQuery = () =>
 	query(messagesRef(), orderBy('createdAt', 'asc'));
 
-export const addMessage = async (
-	message: MessageDocumentData
-): Promise<DocumentReference<MessageDocumentData>> => {
-	console.log('actual addMessage');
-	return addDoc(messagesRef(), message);
+export const setMessage = async (ref: DocumentReference, message: MessageDocumentData) => {
+	return setDoc(ref, message, { merge: true });
+};
+
+export const addMessage = async (content: string, image: File | null, uid: string) => {
+	const messageRef = doc(messagesRef());
+	const snapshot = image && (await uploadMessageImage(messageRef.id, uid, image));
+	const { ref: storageRef } = snapshot || {};
+
+	return setMessage(messageRef, {
+		content,
+		imagePath: storageRef?.fullPath || null,
+		senderId: uid,
+		createdAt: serverTimestamp(),
+	});
+};
+
+export const uploadMessageImage = async (messageId: string, ownerId: string, file: File) => {
+	const storageRef = ref(getStorage(), `${collectionName}/${messageId}/${file.name}`);
+	const metadata = { customMetadata: { ownerId } };
+
+	return uploadBytes(storageRef, file, metadata);
 };

@@ -6,6 +6,7 @@ export const messageFactory = Factory.define<Message>(
 		id: sequence.toString(),
 		createdAt: new Date(),
 		content: '',
+		imagePath: null,
 		senderId: '',
 	})
 )
