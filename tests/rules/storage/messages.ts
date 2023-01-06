@@ -13,10 +13,14 @@ import { getTestEnv } from '@/../tests/utils';
 import { userFactory } from '@/../tests/factories/user';
 import { FirebaseStorage } from 'firebase/storage';
 import firebase from 'firebase/compat/app';
+import path from "node:path";
+import url from "node:url";
 
 const user = userFactory.build({ id: 'user-uid' });
 const other = userFactory.build({ id: 'other-uid' });
-const file = readFileSync('./tests/assets/sample.jpg');
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const imageFilePath = `${__dirname}/../../assets/sample.jpg`;
+const file = readFileSync(imageFilePath);
 const userFilePath = 'messages/user-message-id/sample.jpg';
 const otherFilePath = 'messages/other-message-id/sample.jpg';
 
