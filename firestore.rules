@@ -19,5 +19,9 @@ service cloud.firestore {
       allow create: if isOwn(request.resource.data.senderId);
       allow update, delete: if isOwn(resource.data.senderId);
     }
+
+    match /userSecrets/{uid} {
+      allow get, write: if isOwn(uid);
+    }
   }
 }

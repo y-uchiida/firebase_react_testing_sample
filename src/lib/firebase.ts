@@ -3,6 +3,7 @@ import { firebaseConfig, IS_EMULATED, IS_TESTING } from "@/config/env";
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
+import { getMessaging, getToken } from 'firebase/messaging';
 import {
 	User,
 	connectAuthEmulator,
@@ -16,21 +17,27 @@ import firebaseTestingEmulatorSettings from '../../firebase.json';
 
 import { omit, merge } from 'lodash-es';
 import {
+	Timestamp,
 	DocumentData,
+	QueryDocumentSnapshot,
 	SnapshotOptions,
 	FirestoreDataConverter,
 	PartialWithFieldValue,
-	getFirestore,
+	serverTimestamp as _serverTimestamp, // SDK 間の型定義の違いを埋めるための処置
 	connectFirestoreEmulator,
-	serverTimestamp as _serverTimeStamp, // SDK 間の型定義の違いを埋めるための処置
-	Timestamp,
+	initializeFirestore,
+	getFirestore,
 } from 'firebase/firestore';
+import * as admin from "firebase-admin";
 
+/* firestore から取得したものは、data() と id別々のプロパティになるので、
+ * data() の中にid が含まれるようにする
+ */
+import type { WithId } from '../shared/types/firebase';
 
 /* firebase SDK と Admin SDK の Timestamp 型の差分を消す
  */
-export { Timestamp } from 'firebase/firestore';
-export const serverTimestamp = _serverTimeStamp as unknown as () => Timestamp;
+export const serverTimestamp = _serverTimestamp as unknown as () => Timestamp;
 
 /* 設定したコンフィグのオブジェクトを読み込んで、firebaseを初期化する */
 const app = initializeApp(firebaseConfig);
@@ -56,10 +63,6 @@ if (isEmulating) {
 // export { firebaseConfig, app, auth, storage, functions, googleAuthProvider };
 export { app, firestore, auth, storage, /*functions,*/ googleAuthProvider };
 
-/* firestore から取得したものは、data() と id別々のプロパティになるので、
- * data() の中にid が含まれるようにする
- */
-export type WithId<T> = { id: string } & T;
 
 /**
  * firestore に保存されているドキュメントと、Idのプロパティをまとめて扱うための処理  
@@ -87,3 +90,12 @@ export const signInGoogleWithPopup = async () => {
 };
 
 export const signOut = async () => _signOut(auth);
+
+/**
+ * プッシュ通知用のトークンを取得する
+ */
+export const getFcmToken = async () => {
+	return getToken(getMessaging(), {
+		vapidKey: import.meta.env.VITE_FIREBASE_MESSAGING_VAPID_KEY,
+	});
+};

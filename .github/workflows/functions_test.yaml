@@ -1,0 +1,31 @@
+name: functions_test
+
+on: [pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: リポジトリのチェックアウト
+        uses: actions/checkout@v3
+
+      - name: Node.js ${{ matrix.node-version }} セットアップ
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: npm パッケージのインストール
+        run: |
+          cd functions
+          npm install
+
+      - name: テスト実行
+        run: |
+          cd functions
+          npm run test
