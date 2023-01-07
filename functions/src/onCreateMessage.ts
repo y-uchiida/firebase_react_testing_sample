@@ -21,7 +21,9 @@ export const onCreateMessage = functions
 				userSecretsRef
 			);
 			await Promise.allSettled(
-				secrets.map(({ fcmToken }) =>
+				secrets.filter(
+					({ id }) => id !== senderId
+				).map(({ fcmToken }) =>
 					admin.messaging().send({ token: fcmToken, notification })
 				)
 			);
