@@ -5,7 +5,6 @@ import { connectStorageEmulator, getStorage } from 'firebase/storage';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 import { getMessaging, getToken } from 'firebase/messaging';
 import {
-	User,
 	connectAuthEmulator,
 	getAuth,
 	GoogleAuthProvider,
@@ -19,7 +18,6 @@ import { omit, merge } from 'lodash-es';
 import {
 	Timestamp,
 	DocumentData,
-	QueryDocumentSnapshot,
 	SnapshotOptions,
 	FirestoreDataConverter,
 	PartialWithFieldValue,
@@ -28,7 +26,6 @@ import {
 	initializeFirestore,
 	getFirestore,
 } from 'firebase/firestore';
-import * as admin from "firebase-admin";
 
 /* firestore から取得したものは、data() と id別々のプロパティになるので、
  * data() の中にid が含まれるようにする
@@ -45,7 +42,7 @@ const app = initializeApp(firebaseConfig);
 /* 初期化後、機能別にモジュール化されたオブジェクトをエクスポートする */
 const firestore = getFirestore(app);
 const storage = getStorage(app);
-// const functions = getFunctions(app);
+const functions = getFunctions(app);
 const auth = getAuth(app);
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -56,12 +53,12 @@ if (isEmulating) {
 	const { emulators } = isTesting ? firebaseTestingEmulatorSettings : firebaseEmulatorSettings;
 	connectFirestoreEmulator(firestore, 'localhost', emulators.firestore.port);
 	connectStorageEmulator(storage, 'localhost', emulators.storage.port);
-	// connectFunctionsEmulator(functions, 'localhost', emulators.functions.port);
+	connectFunctionsEmulator(functions, 'localhost', emulators.functions.port);
 	connectAuthEmulator(auth, `http://localhost:${emulators.auth.port}/`);
 }
 
 // export { firebaseConfig, app, auth, storage, functions, googleAuthProvider };
-export { app, firestore, auth, storage, /*functions,*/ googleAuthProvider };
+export { app, firestore, auth, storage, functions, googleAuthProvider };
 
 
 /**
