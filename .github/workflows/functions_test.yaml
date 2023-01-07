@@ -23,7 +23,7 @@ jobs:
       - name: npm パッケージのインストール
         run: |
           cd functions
-          npm ci
+          npm install
 
       - name: テスト実行
         run: |
